@@ -41,6 +41,7 @@
 }
 
 - (NSString*)stringByAppendingURLParams:(NSDictionary*)params {
+    
     NSMutableString *result = [[NSMutableString alloc] init];
     
     [result appendString:self];
@@ -62,9 +63,19 @@
                                                                                                CFSTR("!*'();:@&=+$,/?%#[]"),
                                                                                                kCFStringEncodingUTF8));
         }
-        [result appendFormat:@"%@=%@&", key, escapedObj];
+        
+        if ([key isEqualToString:@"[[output]]"])
+        {
+            [result replaceOccurrencesOfString:@"[[output]]"
+                                    withString:escapedObj
+                                       options:NSCaseInsensitiveSearch
+                                         range:NSMakeRange(0, [result length])];
+        }
+        else
+        {
+            [result appendFormat:@"%@=%@&", key, escapedObj];
+        }
     }];
-    
     return result;
 }
 
